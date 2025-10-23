@@ -5,7 +5,7 @@ window.onload = function () {
     var ClientPortal = PerfectGym.ClientPortal;
 
     var options = {
-        url: "https://presentation.perfectgym.pl/ClientPortal2/",
+        url: "https://fit4lesstesting.perfectgym.com/ClientPortal2/",
         loginPage: {
             navbar: false,
             backgroundImage: true
