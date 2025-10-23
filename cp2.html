@@ -11,6 +11,72 @@
     .wrap { max-width:1200px; margin:24px auto; background:#fff; border-radius:14px;
             box-shadow:0 10px 24px rgba(0,0,0,.08); padding:16px; }
     #status { font:12px/1.4 monospace; color:#666; margin-top:10px; white-space:pre-wrap; }
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@perfectgym/client-portal@1.12.2/dist/ClientPortal.css">
+<style>
+  /* ---- Fit4Less Theme Overrides ---- */
+
+  :root {
+    --f4l-yellow: #F6B221;
+    --f4l-black: #0D0C0D;
+    --f4l-gray: #f6f7f9;
+  }
+
+  body {
+    background-color: var(--f4l-gray);
+    font-family: "Open Sans", Helvetica, Arial, sans-serif;
+    color: var(--f4l-black);
+  }
+
+  /* Outer card */
+  .wrap {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+    padding: 24px;
+    max-width: 1100px;
+    margin: 40px auto;
+  }
+
+  /* Headings */
+  h1, h2, h3 {
+    color: var(--f4l-black);
+    font-weight: 700;
+  }
+
+  /* Buttons inside the portal iframe container (applies to outer shell elements) */
+  button, .pg-btn, .pg-button {
+    background-color: var(--f4l-yellow) !important;
+    border-color: var(--f4l-yellow) !important;
+    color: #000 !important;
+    font-weight: 600 !important;
+    border-radius: 4px !important;
+    text-transform: uppercase;
+  }
+  button:hover, .pg-btn:hover {
+    background-color: #ffcc2a !important;
+  }
+
+  /* Loader overlay around the iframe */
+  .cp-load-mask {
+    background: rgba(13, 12, 13, 0.75) !important;
+  }
+  .cp-load-mask-spinner circle {
+    stroke: var(--f4l-yellow) !important;
+  }
+
+  /* Input focus / form field highlight */
+  input:focus, select:focus {
+    border-color: var(--f4l-yellow) !important;
+    box-shadow: 0 0 0 2px rgba(246,178,33,0.25) !important;
+  }
+
+  /* Optional footer / text adjustments */
+  #status {
+    color: #555;
+    font-size: 12px;
+  }
+</style>
+
   </style>
 </head>
 <body>
