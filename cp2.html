@@ -4,93 +4,86 @@
   <meta charset="utf-8" />
   <title>Fit4Less Client Portal Demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- ClientPortal CSS (pin the version for stability) -->
+
+  <!-- 1. Base PerfectGym ClientPortal CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@perfectgym/client-portal@1.12.2/dist/ClientPortal.css">
+
+  <!-- 2. Fit4Less Theme Overrides -->
   <style>
-    body { margin:0; background:#f6f7f9; font-family:Helvetica,Arial,sans-serif; }
-    .wrap { max-width:1200px; margin:24px auto; background:#fff; border-radius:14px;
-            box-shadow:0 10px 24px rgba(0,0,0,.08); padding:16px; }
-    #status { font:12px/1.4 monospace; color:#666; margin-top:10px; white-space:pre-wrap; }
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@perfectgym/client-portal@1.12.2/dist/ClientPortal.css">
-<style>
-  /* ---- Fit4Less Theme Overrides ---- */
+    :root {
+      --f4l-yellow: #F6B221;
+      --f4l-black: #0D0C0D;
+      --f4l-gray: #f6f7f9;
+    }
 
-  :root {
-    --f4l-yellow: #F6B221;
-    --f4l-black: #0D0C0D;
-    --f4l-gray: #f6f7f9;
-  }
+    body {
+      margin: 0;
+      background-color: var(--f4l-gray);
+      font-family: "Open Sans", Helvetica, Arial, sans-serif;
+      color: var(--f4l-black);
+    }
 
-  body {
-    background-color: var(--f4l-gray);
-    font-family: "Open Sans", Helvetica, Arial, sans-serif;
-    color: var(--f4l-black);
-  }
+    .wrap {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.08);
+      padding: 24px;
+      max-width: 1100px;
+      margin: 40px auto;
+    }
 
-  /* Outer card */
-  .wrap {
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 8px 20px rgba(0,0,0,.08);
-    padding: 24px;
-    max-width: 1100px;
-    margin: 40px auto;
-  }
+    h1, h2, h3 {
+      color: var(--f4l-black);
+      font-weight: 700;
+    }
 
-  /* Headings */
-  h1, h2, h3 {
-    color: var(--f4l-black);
-    font-weight: 700;
-  }
+    /* Buttons around/above iframe (outer page) */
+    button, .pg-btn, .pg-button {
+      background-color: var(--f4l-yellow) !important;
+      border-color: var(--f4l-yellow) !important;
+      color: #000 !important;
+      font-weight: 600 !important;
+      border-radius: 4px !important;
+      text-transform: uppercase;
+    }
+    button:hover, .pg-btn:hover {
+      background-color: #ffcc2a !important;
+    }
 
-  /* Buttons inside the portal iframe container (applies to outer shell elements) */
-  button, .pg-btn, .pg-button {
-    background-color: var(--f4l-yellow) !important;
-    border-color: var(--f4l-yellow) !important;
-    color: #000 !important;
-    font-weight: 600 !important;
-    border-radius: 4px !important;
-    text-transform: uppercase;
-  }
-  button:hover, .pg-btn:hover {
-    background-color: #ffcc2a !important;
-  }
+    /* Loader overlay around the iframe */
+    .cp-load-mask {
+      background: rgba(13, 12, 13, 0.75) !important;
+    }
+    .cp-load-mask-spinner circle {
+      stroke: var(--f4l-yellow) !important;
+    }
 
-  /* Loader overlay around the iframe */
-  .cp-load-mask {
-    background: rgba(13, 12, 13, 0.75) !important;
-  }
-  .cp-load-mask-spinner circle {
-    stroke: var(--f4l-yellow) !important;
-  }
+    /* Focus ring for inputs on outer shell */
+    input:focus, select:focus {
+      border-color: var(--f4l-yellow) !important;
+      box-shadow: 0 0 0 2px rgba(246,178,33,0.25) !important;
+    }
 
-  /* Input focus / form field highlight */
-  input:focus, select:focus {
-    border-color: var(--f4l-yellow) !important;
-    box-shadow: 0 0 0 2px rgba(246,178,33,0.25) !important;
-  }
-
-  /* Optional footer / text adjustments */
-  #status {
-    color: #555;
-    font-size: 12px;
-  }
-</style>
-
+    #status {
+      font: 12px monospace;
+      color: #555;
+      white-space: pre-wrap;
+      margin-top: 10px;
+    }
   </style>
 </head>
+
 <body>
-  <!-- 1) Container that the portal will mount into -->
   <div class="wrap">
     <div id="pg-client-portal"></div>
     <div id="status"></div>
   </div>
 
-  <!-- 2) Load libraries (BEFORE init) -->
+  <!-- Dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/iframe-resizer@4.3.11/js/iframeResizer.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@perfectgym/client-portal@1.12.2/dist/ClientPortal.min.js"></script>
 
-  <!-- 3) Initialize with your testing URL -->
+  <!-- Initialize -->
   <script>
     const log = (m)=>{ const s=document.getElementById('status'); s.textContent += m + "\n"; console.log(m); };
 
@@ -100,39 +93,25 @@
       log("Global ClientPortal: " + !!window.ClientPortal);
 
       const el = document.getElementById('pg-client-portal');
-      if (!el) { log("Missing #pg-client-portal container.", "err"); return; }
+      if (!el) { log("Missing #pg-client-portal container."); return; }
 
       const options = {
-        url: "https://fit4lesstesting.perfectgym.com/ClientPortal2/", // 👈 YOUR test env
+        url: "https://fit4lesstesting.perfectgym.com/ClientPortal2/",
         defaultState: "Login",
         minHeight: 1000,
         loadMask: { disable: false }
       };
 
-      // Version A (per the instructions you pasted): new PerfectGym.ClientPortal(element, options)
       if (window.PerfectGym && window.PerfectGym.ClientPortal) {
-        try {
-          new window.PerfectGym.ClientPortal(el, options);
-          log("Initialized via PerfectGym.ClientPortal(element, options).");
-          return;
-        } catch (e) {
-          log("PerfectGym.ClientPortal init failed, will try fallback. " + e);
-        }
+        new window.PerfectGym.ClientPortal(el, options);
+        log("Initialized via PerfectGym.ClientPortal(element, options).");
+      } else if (window.ClientPortal) {
+        const portal = new window.ClientPortal(options);
+        el.appendChild(portal.element);
+        log("Initialized via new ClientPortal(options) + appendChild.");
+      } else {
+        log("Client Portal library did not load.");
       }
-
-      // Version B (common in newer builds): new ClientPortal(options) + appendChild(portal.element)
-      if (window.ClientPortal) {
-        try {
-          const portal = new window.ClientPortal(options);
-          el.appendChild(portal.element);
-          log("Initialized via new ClientPortal(options) + appendChild.");
-          return;
-        } catch (e) {
-          log("ClientPortal(options) init failed: " + e);
-        }
-      }
-
-      log("Client Portal library did not load. If CDNs are blocked, download the JS/CSS and load them locally.");
     };
   </script>
 </body>
