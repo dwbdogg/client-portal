@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Fit4Less Client Portal Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- (optional) your styles -->
+  <style>
+    body { background:#f6f7f9; margin:0; font-family:Helvetica,Arial,sans-serif; }
+    .card { max-width:1200px; margin:24px auto; background:#fff; border-radius:14px;
+            box-shadow:0 10px 24px rgba(0,0,0,.08); padding:16px; }
+  </style>
+
+  <!-- ClientPortal CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@perfectgym/client-portal@1.12.2/dist/ClientPortal.css" />
+</head>
+<body>
+  <div class="card">
+    <div id="pg-client-portal"></div>
+  </div>
+
+  <!-- Dependencies (load BEFORE init) -->
+  <script src="https://cdn.jsdelivr.net/npm/iframe-resizer@4.3.11/js/iframeResizer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@perfectgym/client-portal@1.12.2/dist/ClientPortal.min.js"></script>
+
+  <!-- Initialize -->
+  <script>
+    if (!window.ClientPortal) {
+      console.error("ClientPortal library didn't load.");
+    } else {
+      const portal = new ClientPortal({
+        url: "https://fit4lesstesting.perfectgym.com/ClientPortal2/", // <-- your env
+        defaultState: "Login",
+        minHeight: 1000,
+        loadMask: { disable: false },
+        loginPage: { navbar: false, logo: false, backgroundImage: false },
+        navigation: { hide: false, logo: false },
+        registration: { logo: false }
+      });
+      document.getElementById("pg-client-portal").appendChild(portal.element);
+    }
+  </script>
+</body>
+</html>
