@@ -1,104 +1,60 @@
+// docs/index.js
 
-/* THIS IS SIMPLE DEMO */
+// Simple logger so we can see status in the console
+const log = (...a) => console.log("[demo]", ...a);
 
-window.onload = function () {
-    var ClientPortal = PerfectGym.ClientPortal;
+// 1) Initialize the portal to YOUR env
+const portal = new ClientPortal({
+  url: "https://fit4lesstesting.perfectgym.com/ClientPortal2/",   // ← your test env
+  defaultState: "Login",                                          // or "Profile"
+  minHeight: 1000,
+  loadMask: { disable: false },
 
-    var options = {
-        url: "https://fit4lesstesting.perfectgym.com/ClientPortal2",
-        loginPage: {
-            navbar: false,
-            backgroundImage: true
-        },
-        navigation: {
-            hide: true
-        },
-        registration: {
-            logo: false
-        },
-        
-        onConnect() {
-            console.info('Connected to Client Portal');
+  // Optional toggles
+  loginPage: { navbar: false, logo: false, backgroundImage: false },
+  navigation: { hide: false, logo: false },
+  registration: { logo: false },
 
-            window.getUserData();
-        },
+  onConnect: () => { log("onConnect"); setAuthUI(false); },
+  onLogin:   () => { log("onLogin");   setAuthUI(true);  },
+  onLogout:  () => { log("onLogout");  setAuthUI(false); },
+  onChangeState: (info) => log("onChangeState", info)
+});
 
-        onUserLoggedIn(data) {
-            var navigationElement = document.getElementById('page-header');
+// 2) Mount it into the placeholder div in docs/index.html
+const host = document.getElementById("pg-client-portal");
+if (!host) {
+  console.error("Missing #pg-client-portal in docs/index.html");
+} else {
+  host.appendChild(portal.element);
+  log("iframe appended");
+}
 
-            navigationElement.classList.add('user-logged-in');
-        },
-        onUserLoggedOut(data) {
-            var navigationElement = document.getElementById('page-header');
+// 3) Hook up header buttons used by index.html
+window.goTo = function(stateName, params) {
+  try {
+    portal.goTo(stateName, params || {});
+  } catch (e) {
+    console.error("goTo error", e);
+  }
+};
 
-            navigationElement.classList.remove('user-logged-in');
-        },
+window.logout = function() {
+  try {
+    if (portal.logout) portal.logout();
+    else portal.goTo("Logout");
+  } catch (e) {
+    console.error("logout error", e);
+  }
+};
 
-        loadMask: {
-            disable: true,
-            disableOnInit: true,
-            onShow: function() {
-                console.log("Show load mask")
-            },
-            onHide: function() {
-                console.log("Hide load mask");
-            }
-        },
+// 4) Show/hide nav for auth state
+function setAuthUI(isLogged) {
+  document.querySelectorAll(".logged-state").forEach(el => el.style.display = isLogged ? "inline-block" : "none");
+  document.querySelectorAll(".not-logged-state").forEach(el => el.style.display = isLogged ? "none" : "inline-block");
+}
 
-        onStateChangeSuccess(data) {
-            console.log("stateChanged from: ", data.fromState, " to:", data.toState);
-        }
-    };
-
-    var element = document.getElementById('pg-client-portal');
-
-    if (element instanceof HTMLElement) {
-        var CP = new ClientPortal(element, options);
-    }
-
-    window.getUserData = function() {
-        CP.isUserLoggedIn()
-            .then(function(data) {
-                var navigationElement = document.getElementById('page-header');
-
-                if (data.isAuthenticated) {
-                    navigationElement.classList.add('.user-logged-in');
-                } else {
-                    navigationElement.classList.remove('.user-logged-in');
-                }
-            });
-
-    }
-
-    window.logout = function() {
-        CP.logout()
-            .then(function() {
-                var navigationElement = document.getElementById('page-header');
-
-                navigationElement.classList.remove('.user-logged-in');
-            })
-    }
-
-    window.goTo = function(stateName, params) {
-        CP.goTo(ClientPortal.State[stateName], params)
-    }
-
-    var burger = document.querySelector('.burger img');
-    var mobileList = document.querySelector('.mobile-list');
-
-    burger.addEventListener('click', function () {
-        if (mobileList.classList.contains('hidden')) {
-            mobileList.classList.remove('hidden');
-        } else {
-            mobileList.classList.add('hidden');
-        }
-    })
-
-    var links = document.querySelectorAll('.mobile-list .nav-link');
-
-    for (var i = 0; i < links.length; i++) {
-        links[i].addEventListener('click', function () {
-            mobileList.classList.add('hidden');
-        })
-    }
+// 5) Safety checks
+if (!window.ClientPortal) {
+  console.error("ClientPortal is not defined — library failed to load.");
 }
